@@ -9,6 +9,13 @@
   <foreignModel>fMproject.ecore</foreignModel>
   <testsDirectory xsi:nil="true"/>
   <genPackages prefix="FMproject" disposableProviderFactory="true" ecorePackage="fMproject.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="fMproject.ecore#//CampusLocation">
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//CampusLocation/Lahore"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//CampusLocation/Islamabad"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//CampusLocation/Faisalabad"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//CampusLocation/Karachi"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//CampusLocation/Peshawar"/>
+    </genEnums>
     <genClasses ecoreClass="fMproject.ecore#//Student">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Student/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Student/rollNumber"/>

@@ -6,18 +6,18 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rollNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"
         iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="section" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="degree"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="CNIC"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="address"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="phoneNumber"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="degree" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="CNIC" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Long"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="address" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="phoneNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Long"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="parentPhoneNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//AnySimpleType"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="gender"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="DOB"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bloodGroup"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nationality"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="email"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="batchYear"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="campus"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="gender" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EChar"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="DOB" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bloodGroup" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EChar"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nationality" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="batchYear" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="campus" eType="#//CampusLocation"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="warning"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="Registration" upperBound="-1"
         eType="#//Courses" eOpposite="#//Courses/studiedBy"/>
@@ -67,4 +67,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="Transcript"/>
   <eClassifiers xsi:type="ecore:EClass" name="Fee"/>
   <eClassifiers xsi:type="ecore:EClass" name="Loan"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="CampusLocation">
+    <eLiterals name="Lahore"/>
+    <eLiterals name="Islamabad" value="1"/>
+    <eLiterals name="Faisalabad" value="2"/>
+    <eLiterals name="Karachi" value="3"/>
+    <eLiterals name="Peshawar" value="4"/>
+  </eClassifiers>
 </ecore:EPackage>
