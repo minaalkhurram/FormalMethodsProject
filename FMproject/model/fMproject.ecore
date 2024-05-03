@@ -5,7 +5,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rollNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"
         iD="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="section"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="section" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="degree"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="CNIC"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="address"/>
