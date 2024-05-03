@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="fMproject" nsURI="http://www.example.org/fMproject" nsPrefix="fMproject">
+  <eClassifiers xsi:type="ecore:EClass" name="Student">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rollNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="section"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="degree"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="CNIC"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="address"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="phoneNumber"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="parentPhoneNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//AnySimpleType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="gender"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="DOB"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bloodGroup"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nationality"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="email"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="batchYear"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="campus"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="warning"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Registration" upperBound="-1"
+        eType="#//Courses" eOpposite="#//Courses/studiedBy"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MasterStudent" eSuperTypes="#//Student"/>
+  <eClassifiers xsi:type="ecore:EClass" name="BachelorStudent" eSuperTypes="#//Student"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Courses">
+    <eOperations name="registerCourse"/>
+    <eOperations name="withdrawCourse"/>
+    <eOperations name="dropCourse"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="CourseName" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="courseCode" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="instructor"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="creditHours" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="semester" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="studiedBy" upperBound="-1"
+        eType="#//Student" eOpposite="#//Student/Registration"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="offeredBy" eType="#//Department"
+        eOpposite="#//Department/offers"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attendance" upperBound="-1"
+        eType="#//Attendance" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="taughtBy" upperBound="-1"
+        eType="#//Teacher" eOpposite="#//Teacher/teaches"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CourseRegistration"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Department">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="deptName"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="HOD"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="offers" upperBound="-1"
+        eType="#//Courses" eOpposite="#//Courses/offeredBy"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Attendance">
+    <eOperations name="markAttendance"/>
+    <eOperations name="viewAttendance"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="totalNoOfClasses"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="totalAbsents"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="totalLates"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Teacher">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="teaches" upperBound="-1"
+        eType="#//Courses" eOpposite="#//Courses/taughtBy"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Transcript"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Fee"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Loan"/>
+</ecore:EPackage>
