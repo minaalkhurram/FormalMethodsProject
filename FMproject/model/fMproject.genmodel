@@ -41,6 +41,26 @@
       <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Scholarship%20criteria/Merit%20Based"/>
       <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Scholarship%20criteria/Need%20Based"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="fMproject.ecore#//FinancialAidStatus">
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//FinancialAidStatus/approved"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//FinancialAidStatus/pending"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="fMproject.ecore#//Grade%20Type">
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Grade%20Type/A*"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Grade%20Type/A"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Grade%20Type/A-"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Grade%20Type/B+"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Grade%20Type/B"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Grade%20Type/B-"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Grade%20Type/C+"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Grade%20Type/C"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Grade%20Type/C-"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Grade%20Type/D+"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Grade%20Type/D"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Grade%20Type/D-"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Grade%20Type/F"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Grade%20Type/W"/>
+    </genEnums>
     <genClasses ecoreClass="fMproject.ecore#//Student">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Student/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Student/rollNumber"/>
@@ -58,10 +78,10 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Student/batchYear"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Student/campus"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Student/warningCount"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference fMproject.ecore#//Student/Registers"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Student/CGPA"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference fMproject.ecore#//Student/Issued"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Student/studentType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference fMproject.ecore#//Student/studiedBy"/>
       <genOperations ecoreOperation="fMproject.ecore#//Student/registerCourses"/>
       <genOperations ecoreOperation="fMproject.ecore#//Student/withdrawCourse"/>
       <genOperations ecoreOperation="fMproject.ecore#//Student/viewWarning"/>
@@ -83,11 +103,12 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Courses/maxStudents"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Courses/creditHours"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Courses/semester"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference fMproject.ecore#//Courses/studiedBy"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference fMproject.ecore#//Courses/offeredBy"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference fMproject.ecore#//Courses/taughtBy"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference fMproject.ecore#//Courses/hasAttendance"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Courses/courseType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference fMproject.ecore#//Courses/registers"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference fMproject.ecore#//Courses/offeredIn"/>
       <genOperations ecoreOperation="fMproject.ecore#//Courses/viewCourseDetails"/>
       <genOperations ecoreOperation="fMproject.ecore#//Courses/viewEnrolledStudents"/>
       <genOperations ecoreOperation="fMproject.ecore#//Courses/viewCourseResults"/>
@@ -96,6 +117,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Semester/semesterID"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Semester/SemesterType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Semester/year"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference fMproject.ecore#//Semester/offers"/>
       <genOperations ecoreOperation="fMproject.ecore#//Semester/viewSemesterDetails"/>
       <genOperations ecoreOperation="fMproject.ecore#//Semester/viewCourseOfferings"/>
     </genClasses>
@@ -155,6 +177,15 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Registeration/registerationDate"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Registeration/registerationStatus"/>
       <genOperations ecoreOperation="fMproject.ecore#//Registeration/viewRegisteration"/>
+    </genClasses>
+    <genClasses ecoreClass="fMproject.ecore#//FinancialAid">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//FinancialAid/financialAidStatus"/>
+      <genOperations ecoreOperation="fMproject.ecore#//FinancialAid/viewFinancialAidStatus"/>
+      <genOperations ecoreOperation="fMproject.ecore#//FinancialAid/repayementDetails"/>
+    </genClasses>
+    <genClasses ecoreClass="fMproject.ecore#//Grade">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Grade/GradeType"/>
+      <genOperations ecoreOperation="fMproject.ecore#//Grade/viewGradeDetails"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

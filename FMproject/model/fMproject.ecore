@@ -31,12 +31,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="batchYear" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="campus" eType="#//CampusLocation"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="warningCount" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="Registers" upperBound="-1"
-        eType="#//Courses" eOpposite="#//Courses/studiedBy"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="CGPA" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Double"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="Issued" upperBound="3"
         eType="#//Warning" eOpposite="#//Warning/issuedTo"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="studentType" eType="#//Student%20Type"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="studiedBy" upperBound="-1"
+        eType="#//Registeration"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MasterStudent" eSuperTypes="#//Student"/>
   <eClassifiers xsi:type="ecore:EClass" name="BachelorStudent" eSuperTypes="#//Student"/>
@@ -49,8 +49,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxStudents" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="creditHours" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="semester" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="studiedBy" upperBound="-1"
-        eType="#//Student" eOpposite="#//Student/Registers"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="offeredBy" eType="#//Department"
         eOpposite="#//Department/offers"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="taughtBy" upperBound="-1"
@@ -58,6 +56,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="hasAttendance" upperBound="-1"
         eType="#//Attendance" eOpposite="#//Attendance/ofCourses"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="courseType" eType="#//CourseType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="registers" upperBound="-1"
+        eType="#//Registeration"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="offeredIn" eType="#//Semester"
+        eOpposite="#//Semester/offers"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Semester">
     <eOperations name="viewSemesterDetails"/>
@@ -65,6 +67,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="semesterID" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="SemesterType" eType="#//SemesterType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="year" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="offers" upperBound="-1"
+        eType="#//Courses" eOpposite="#//Courses/offeredIn"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Department">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="deptName" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
@@ -160,5 +164,34 @@
   <eClassifiers xsi:type="ecore:EEnum" name="Scholarship criteria">
     <eLiterals name="Merit Based"/>
     <eLiterals name="Need Based" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FinancialAid">
+    <eOperations name="viewFinancialAidStatus"/>
+    <eOperations name="repayementDetails"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="financialAidStatus" eType="#//FinancialAidStatus"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="FinancialAidStatus">
+    <eLiterals name="approved"/>
+    <eLiterals name="pending" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Grade">
+    <eOperations name="viewGradeDetails"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="GradeType" eType="#//Grade%20Type"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Grade Type">
+    <eLiterals name="A*"/>
+    <eLiterals name="A" value="1"/>
+    <eLiterals name="A-" value="2"/>
+    <eLiterals name="B+" value="3"/>
+    <eLiterals name="B" value="4"/>
+    <eLiterals name="B-" value="5"/>
+    <eLiterals name="C+" value="6"/>
+    <eLiterals name="C" value="7"/>
+    <eLiterals name="C-" value="8"/>
+    <eLiterals name="D+" value="9"/>
+    <eLiterals name="D" value="10"/>
+    <eLiterals name="D-" value="11"/>
+    <eLiterals name="F" value="12"/>
+    <eLiterals name="W" value="13"/>
   </eClassifiers>
 </ecore:EPackage>
