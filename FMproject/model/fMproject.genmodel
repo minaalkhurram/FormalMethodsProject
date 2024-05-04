@@ -21,6 +21,14 @@
       <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//SemesterType/Spring"/>
       <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//SemesterType/Summer"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="fMproject.ecore#//PaymentMethod">
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//PaymentMethod/BankChallan"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//PaymentMethod/CreditCard"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="fMproject.ecore#//Location">
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Location/AccountsOffice"/>
+      <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//Location/Flex"/>
+    </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="fMproject.ecore#//CourseType">
       <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//CourseType/core"/>
       <genEnumLiterals ecoreEnumLiteral="fMproject.ecore#//CourseType/elective"/>
@@ -82,9 +90,11 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference fMproject.ecore#//Student/Issued"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Student/studentType"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference fMproject.ecore#//Student/studiedBy"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference fMproject.ecore#//Student/studies"/>
       <genOperations ecoreOperation="fMproject.ecore#//Student/registerCourses"/>
       <genOperations ecoreOperation="fMproject.ecore#//Student/withdrawCourse"/>
       <genOperations ecoreOperation="fMproject.ecore#//Student/viewWarning"/>
+      <genOperations ecoreOperation="fMproject.ecore#//Student/viewFeeDetails"/>
       <genOperations ecoreOperation="fMproject.ecore#//Student/applyForFinancialAid"/>
       <genOperations ecoreOperation="fMproject.ecore#//Student/dropCourse"/>
       <genOperations ecoreOperation="fMproject.ecore#//Student/aaplyForGradeChangeRequest"/>
@@ -109,6 +119,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Courses/courseType"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference fMproject.ecore#//Courses/registers"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference fMproject.ecore#//Courses/offeredIn"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference fMproject.ecore#//Courses/studiedBy"/>
       <genOperations ecoreOperation="fMproject.ecore#//Courses/viewCourseDetails"/>
       <genOperations ecoreOperation="fMproject.ecore#//Courses/viewEnrolledStudents"/>
       <genOperations ecoreOperation="fMproject.ecore#//Courses/viewCourseResults"/>
@@ -159,6 +170,12 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Result/attendancePercentage"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference fMproject.ecore#//Result/hasResult"/>
       <genOperations ecoreOperation="fMproject.ecore#//Result/viewAttendanceDetails"/>
+    </genClasses>
+    <genClasses ecoreClass="fMproject.ecore#//Fee">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Fee/paymentMethod"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Fee/location"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference fMproject.ecore#//Fee/hasFee"/>
+      <genOperations ecoreOperation="fMproject.ecore#//Fee/viewFeeDetail"/>
     </genClasses>
     <genClasses ecoreClass="fMproject.ecore#//Loan">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute fMproject.ecore#//Loan/loanID"/>
