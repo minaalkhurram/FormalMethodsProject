@@ -12,17 +12,20 @@
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="Student">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
-      <details key="constraints" value="ViewWarningStatus ViewFeeDetails IssueWarningAtSemesterEnd UpdateWarningCountAfterSemester WarningCountClosure ResetWarningCount AdmissionCancellation FeeDueDate"/>
+      <details key="constraints" value="ViewWarningStatus ViewFeeDetails viewCourses IssueWarningAtSemesterEnd UpdateWarningCountAfterSemester WarningCountClosure ResetWarningCount AdmissionCancellation FeeDueDate courseType StudentType"/>
     </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="ViewWarningStatus" value="self.warningCount->notEmpty() implies self.viewWarning() &lt;> null"/>
       <details key="ViewFeeDetails" value=" self.viewFeeDetails() &lt;> null"/>
+      <details key="viewCourses" value="self.viewAllCourses()&lt;>null"/>
       <details key="IssueWarningAtSemesterEnd" value="&#xA;            self.studiedBy->exists(sem | &#xA;             self.hasSemester.semesterType = SemesterType::Fall or&#xA;             self.hasSemester.semesterType = SemesterType::Spring or&#xA;             self.hasSemester.semesterType = SemesterType::Summer&#xA;             ) implies&#xA;               self.CGPA &lt; self.offered.minimumCGPA implies&#xA;               self.warningCount > self.Issued->size()@pre"/>
       <details key="UpdateWarningCountAfterSemester" value="&#xA;        self.hasSemester &lt;> null implies&#xA;        self.updateWarningCountIfNeeded()"/>
       <details key="WarningCountClosure" value="&#xA;        self.warningCount &lt;= 2"/>
       <details key="ResetWarningCount" value="&#xA;        (self.warningCount >= 3 and self.CGPA >= self.offered.minimumCGPA) implies&#xA;        self.warningCount = 0"/>
       <details key="AdmissionCancellation" value="&#xA;        let maxDuration : Integer = 10&#xA;        in&#xA;            self.calculateEnrollmentDuration() &lt;= maxDuration"/>
       <details key="FeeDueDate" value="&#xA;        self.checkFeeDueDate()"/>
+      <details key="courseType" value="self.studies->forAll(course | course.courseType = CourseType::core)"/>
+      <details key="StudentType" value="&#xA;    if self.oclIsTypeOf(BachelorStudent) then&#xA;        self.studies->size() &lt;= 5&#xA;    else&#xA;        self.studies->size() &lt;= 3&#xA;    endif"/>
     </eAnnotations>
     <eOperations name="registerCourses"/>
     <eOperations name="withdrawCourse"/>
@@ -116,6 +119,7 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="repeatIndicator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="announcedDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="withdrawalDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="offeredBy" eType="#//Department"
         eOpposite="#//Department/offers"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="taughtBy" upperBound="-1"
@@ -125,17 +129,25 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="courseType" eType="#//CourseType"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="registers" upperBound="-1"
         eType="#//Registeration"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="offeredIn" eType="#//Semester"
-        eOpposite="#//Semester/offers"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="offeredIn" ordered="false"
+        upperBound="-1" eType="#//Semester" eOpposite="#//Semester/offers"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="studiedBy" upperBound="-1"
         eType="#//Student" eOpposite="#//Student/studies"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="hasResult" lowerBound="1"
         eType="#//Result"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Semester">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="SemesterType"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="SemesterType" value="self.semesterType = SemesterType::Fall or self.semesterType = SemesterType::Spring or self.semesterType = SemesterType::Summer"/>
+    </eAnnotations>
     <eOperations name="viewSemesterDetails"/>
     <eOperations name="viewCourseOfferings"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="semesterID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="endDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="startDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="semesterType" eType="#//SemesterType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="year" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="offers" upperBound="-1"
