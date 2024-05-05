@@ -19,7 +19,7 @@
       <details key="twentyViewFeeDetails" value=" self.viewFeeDetails() &lt;> null"/>
       <details key="oneViewCourses" value="self.viewAllCourses()&lt;>null"/>
       <details key="fifteenIssueWarningAtSemesterEnd" value="&#xA;            self.studiedBy->exists(sem | &#xA;             self.hasSemester.semesterType = SemesterType::Fall or&#xA;             self.hasSemester.semesterType = SemesterType::Spring or&#xA;             self.hasSemester.semesterType = SemesterType::Summer&#xA;             ) implies&#xA;               self.CGPA &lt; self.offered.minimumCGPA implies&#xA;               self.warningCount > self.Issued->size()@pre"/>
-      <details key="seventeenUpdateWarningCountAfterSemester" value="&#xA;        self.studiedBy->forAll(registeration |&#xA;        registeration.registerationStatus = RegisterationStatus::registered implies&#xA;            self.CGPA >= self.offered.minimumCGPA)"/>
+      <details key="seventeenUpdateWarningCountAfterSemester" value="&#xA;        self.studiedBy->notEmpty() and self.studiedBy->exists(registeration |&#xA;        registeration.registerationStatus = RegisterationStatus::_'not registered' and&#xA;        self.CGPA &lt; self.offered.minimumCGPA and&#xA;        self.warningCount = 1&#xA;        )"/>
       <details key="eighteenResetWarningCount" value="&#xA;        (self.warningCount >= 3 and self.CGPA >= self.offered.minimumCGPA) implies&#xA;        self.warningCount = 0"/>
       <details key="ninteenAdmissionCancellation" value="&#xA;        let maxDuration : Integer = 10&#xA;        in&#xA;            self.calculateEnrollmentDuration() &lt;= maxDuration"/>
       <details key="threeCourseType" value="self.studies->forAll(course | course.courseType = CourseType::core)"/>
