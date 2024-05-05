@@ -12,7 +12,7 @@
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="Student">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
-      <details key="constraints" value="forteenViewWarningStatus twentyViewFeeDetails oneViewCourses fifteenIssueWarningAtSemesterEnd seventeenUpdateWarningCountAfterSemester eighteenResetWarningCount ninteenAdmissionCancellation threeCourseType fourStudentType thirtyfive thirtySix thirtyseven thirtyeight thirtyNine twentyEight twentyfourEligibility sixteenRegisterCourseWithWarning"/>
+      <details key="constraints" value="forteenViewWarningStatus twentyViewFeeDetails oneViewCourses fifteenIssueWarningAtSemesterEnd seventeenUpdateWarningCountAfterSemester eighteenResetWarningCount ninteenAdmissionCancellation threeCourseType fourStudentType thirtyfive thirtySix thirtyseven thirtyeight thirtyNine twentyEight twentyfourEligibility sixteenRegisterCourseWithWarning twentyfiveLoan twentySix"/>
     </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="forteenViewWarningStatus" value="self.warningCount->notEmpty() implies self.viewWarning() &lt;> null"/>
@@ -32,17 +32,21 @@
       <details key="twentyEight" value=" self.degree = 'Bachelor' implies self.CGPA >= 2.0 implies self.hasLoan.loanStatus = LoanStatus::Active&#xA;        and&#xA;        self.degree = 'Master' implies self.CGPA >= 2.5 implies self.hasLoan.loanStatus = LoanStatus::Active&#xA;        and&#xA;        self.hasLoan.loanStatus = LoanStatus::Active implies (self.degree = 'Bachelor' and self.CGPA &lt; 2.0)&#xA;        or (self.degree = 'Master' and self.CGPA &lt; 2.5)"/>
       <details key="twentyfourEligibility" value="self.hasPaidAllDues or self.getApprovalByHOD() implies  self.canAppearinExams()"/>
       <details key="sixteenRegisterCourseWithWarning" value="self.warningCount > 0 and self.getApprovalByHOD() implies self.registerCourses()"/>
+      <details key="twentyfiveLoan" value=" self.studentType = _'Student Type'::indigent implies&#xA;        (&#xA;        self.applyForLoan() &lt;> null&#xA;        )"/>
     </eAnnotations>
     <eOperations name="registerCourses"/>
     <eOperations name="withdrawCourse"/>
     <eOperations name="viewWarning"/>
     <eOperations name="viewFeeDetails"/>
     <eOperations name="applyForFinancialAid"/>
+    <eOperations name="academicPerformanceSatisfactory" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eOperations name="renewalEligible" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eOperations name="dropCourse"/>
     <eOperations name="applyForGradeChangeRequest"/>
     <eOperations name="requestForSubsequentSemesterRegisteration"/>
     <eOperations name="applyForLoan"/>
     <eOperations name="renewLoan"/>
+    <eOperations name="renewAid" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eOperations name="signIn"/>
     <eOperations name="signOut"/>
     <eOperations name="viewAllCourses"/>
@@ -92,6 +96,10 @@
         eType="#//Result" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="hasLoan" lowerBound="1"
         eType="#//Loan"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hasFee" lowerBound="1"
+        eType="#//Fee"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hasAid" ordered="false"
+        upperBound="-1" eType="#//FinancialAid"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MasterStudent" eSuperTypes="#//Student"/>
   <eClassifiers xsi:type="ecore:EClass" name="BachelorStudent" eSuperTypes="#//Student"/>
@@ -236,8 +244,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" eType="#//Location"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isRefundable" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="amount" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Double"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dueDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="hasFee" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="isGivenTo" upperBound="-1"
         eType="#//Student" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Loan">
@@ -308,9 +318,20 @@
     <eLiterals name="Need Based" value="1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FinancialAid">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="twentysix twentySeven"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="twentysix" value="&#xA;&#x9;&#x9;isProvidedTo->forAll(student |&#xA;        student.renewalEligible() and student.academicPerformanceSatisfactory() implies student.renewAid()&#xA;       )"/>
+      <details key="twentySeven" value="&#xA;       isProvidedTo->forAll(student |&#xA;        self.amount &lt;= student.hasFee.amount)"/>
+    </eAnnotations>
     <eOperations name="viewFinancialAidStatus"/>
     <eOperations name="repayementDetails"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="amount" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Double"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="financialAidStatus" eType="#//FinancialAidStatus"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="isProvidedTo" ordered="false"
+        upperBound="-1" eType="#//Student"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="FinancialAidStatus">
     <eLiterals name="approved"/>
