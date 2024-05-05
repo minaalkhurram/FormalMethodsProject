@@ -12,7 +12,7 @@
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="Student">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
-      <details key="constraints" value="ViewWarningStatus ViewFeeDetails viewCourses IssueWarningAtSemesterEnd UpdateWarningCountAfterSemester WarningCountClosure ResetWarningCount AdmissionCancellation FeeDueDate courseType StudentType"/>
+      <details key="constraints" value="ViewWarningStatus ViewFeeDetails viewCourses IssueWarningAtSemesterEnd UpdateWarningCountAfterSemester WarningCountClosure ResetWarningCount AdmissionCancellation FeeDueDate courseType StudentType thirtyfive thirtySix thirtyseven thirtyeight thirtyNine"/>
     </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="ViewWarningStatus" value="self.warningCount->notEmpty() implies self.viewWarning() &lt;> null"/>
@@ -26,6 +26,11 @@
       <details key="FeeDueDate" value="&#xA;        self.checkFeeDueDate()"/>
       <details key="courseType" value="self.studies->forAll(course | course.courseType = CourseType::core)"/>
       <details key="StudentType" value="&#xA;    if self.oclIsTypeOf(BachelorStudent) then&#xA;        self.studies->size() &lt;= 5&#xA;    else&#xA;        self.studies->size() &lt;= 3&#xA;    endif"/>
+      <details key="thirtyfive" value="self.studies->forAll(c | c.hasAttendance->notEmpty())"/>
+      <details key="thirtySix" value="self.studies->forAll(course |  course.hasAttendance->notEmpty() and &#xA;&#x9;&#x9;&#x9;course.hasAttendance->forAll(attendance | attendance.attendancePercentage >= 0.8))"/>
+      <details key="thirtyseven" value=" &#xA;&#x9;&#x9;&#x9;self.studies->forAll(course | Result.allInstances()->exists(result | result.studentID = self.rollNumber and result.courseID = course.courseCode))"/>
+      <details key="thirtyeight" value="&#xA;&#x9;&#x9;&#x9; self.studies->forAll(course | &#xA;             Result.allInstances()->exists(result | &#xA;              result.studentID = self.rollNumber and &#xA;              result.courseID = course.courseCode and &#xA;              result.semesterID = self.hasSemester.semesterID&#xA;              ) implies self.applyForGradeChangeRequest())"/>
+      <details key="thirtyNine" value=" self.studies->forAll(course |  self.applyForGradeChangeRequest() implies  course.offeredBy.hasHOD.approveRetake()=true)"/>
     </eAnnotations>
     <eOperations name="registerCourses"/>
     <eOperations name="withdrawCourse"/>
@@ -158,6 +163,20 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="deptID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="offers" upperBound="-1"
         eType="#//Courses" eOpposite="#//Courses/offeredBy"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hasHOD" upperBound="-1"
+        eType="#//HOD"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Teacher">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="teaches" upperBound="-1"
+        eType="#//Courses" eOpposite="#//Courses/taughtBy"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="HOD" eSuperTypes="#//Teacher">
+    <eOperations name="approveGradeChange" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eOperations name="approveRetake" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Attendance">
     <eOperations name="markAttendance"/>
@@ -174,14 +193,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="attendancePercentage" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Double"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Teacher">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"
-        iD="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="teaches" upperBound="-1"
-        eType="#//Courses" eOpposite="#//Courses/taughtBy"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Warning">
     <eOperations name="viewWarningStatus"/>
