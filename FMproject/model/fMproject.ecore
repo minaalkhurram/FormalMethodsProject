@@ -12,15 +12,14 @@
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="Student">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
-      <details key="constraints" value="forteenViewWarningStatus twentyViewFeeDetails oneViewCourses fifteenIssueWarningAtSemesterEnd seventeenUpdateWarningCountAfterSemester WarningCountClosure eighteenResetWarningCount ninteenAdmissionCancellation threeCourseType fourStudentType thirtyfive thirtySix thirtyseven thirtyeight thirtyNine twentyEight"/>
+      <details key="constraints" value="forteenViewWarningStatus twentyViewFeeDetails oneViewCourses fifteenIssueWarningAtSemesterEnd seventeenUpdateWarningCountAfterSemester eighteenResetWarningCount ninteenAdmissionCancellation threeCourseType fourStudentType thirtyfive thirtySix thirtyseven thirtyeight thirtyNine twentyEight twentyfourEligibility sixteenRegisterCourseWithWarning"/>
     </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="forteenViewWarningStatus" value="self.warningCount->notEmpty() implies self.viewWarning() &lt;> null"/>
       <details key="twentyViewFeeDetails" value=" self.viewFeeDetails() &lt;> null"/>
       <details key="oneViewCourses" value="self.viewAllCourses()&lt;>null"/>
       <details key="fifteenIssueWarningAtSemesterEnd" value="&#xA;            self.studiedBy->exists(sem | &#xA;             self.hasSemester.semesterType = SemesterType::Fall or&#xA;             self.hasSemester.semesterType = SemesterType::Spring or&#xA;             self.hasSemester.semesterType = SemesterType::Summer&#xA;             ) implies&#xA;               self.CGPA &lt; self.offered.minimumCGPA implies&#xA;               self.warningCount > self.Issued->size()@pre"/>
-      <details key="seventeenUpdateWarningCountAfterSemester" value="&#xA;        self.hasSemester &lt;> null implies&#xA;        self.updateWarningCountIfNeeded()"/>
-      <details key="WarningCountClosure" value="&#xA;        self.warningCount &lt;= 2"/>
+      <details key="seventeenUpdateWarningCountAfterSemester" value="&#xA;        self.studiedBy->forAll(registeration |&#xA;        registeration.registerationStatus = RegisterationStatus::registered implies&#xA;            self.CGPA >= self.offered.minimumCGPA)"/>
       <details key="eighteenResetWarningCount" value="&#xA;        (self.warningCount >= 3 and self.CGPA >= self.offered.minimumCGPA) implies&#xA;        self.warningCount = 0"/>
       <details key="ninteenAdmissionCancellation" value="&#xA;        let maxDuration : Integer = 10&#xA;        in&#xA;            self.calculateEnrollmentDuration() &lt;= maxDuration"/>
       <details key="threeCourseType" value="self.studies->forAll(course | course.courseType = CourseType::core)"/>
@@ -31,6 +30,8 @@
       <details key="thirtyeight" value="&#xA;&#x9;&#x9;&#x9; self.studies->forAll(course | &#xA;             Result.allInstances()->exists(result | &#xA;              result.studentID = self.rollNumber and &#xA;              result.courseID = course.courseCode and &#xA;              result.semesterID = self.hasSemester.semesterID&#xA;              ) implies self.applyForGradeChangeRequest())"/>
       <details key="thirtyNine" value=" self.studies->forAll(course |  self.applyForGradeChangeRequest() implies  course.offeredBy.hasHOD.approveRetake()=true)"/>
       <details key="twentyEight" value=" self.degree = 'Bachelor' implies self.CGPA >= 2.0 implies self.hasLoan.loanStatus = LoanStatus::Active&#xA;        and&#xA;        self.degree = 'Master' implies self.CGPA >= 2.5 implies self.hasLoan.loanStatus = LoanStatus::Active&#xA;        and&#xA;        self.hasLoan.loanStatus = LoanStatus::Active implies (self.degree = 'Bachelor' and self.CGPA &lt; 2.0)&#xA;        or (self.degree = 'Master' and self.CGPA &lt; 2.5)"/>
+      <details key="twentyfourEligibility" value="self.hasPaidAllDues or self.getApprovalByHOD() implies  self.canAppearinExams()"/>
+      <details key="sixteenRegisterCourseWithWarning" value="self.warningCount > 0 and self.getApprovalByHOD() implies self.registerCourses()"/>
     </eAnnotations>
     <eOperations name="registerCourses"/>
     <eOperations name="withdrawCourse"/>
@@ -48,9 +49,13 @@
     <eOperations name="updateWarningCountIfNeeded" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eOperations name="calculateEnrollmentDuration" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigInteger"/>
     <eOperations name="checkFeeDueDate" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eOperations name="getApprovalByHOD" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eOperations name="canAppearinExams" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="hasCompletedCourse" lowerBound="1"
         eType="#//Courses"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasPaidAllDues" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rollNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="section" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -220,14 +225,18 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Fee">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
-      <details key="constraints" value="twentytwoFeePayment"/>
+      <details key="constraints" value="twentytwoFeePayment twentythreeRefundableFee"/>
     </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="twentytwoFeePayment" value="&#xA;        self.paymentMethod = PaymentMethod::BankChallan and&#xA;        self.location = Location::AccountsOffice or self.location = Location::Flex"/>
+      <details key="twentythreeRefundableFee" value="self.paymentMethod &lt;> PaymentMethod::SecurityDeposit implies&#xA;        self.isRefundable = false"/>
     </eAnnotations>
     <eOperations name="viewFeeDetail"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="paymentMethod" eType="#//PaymentMethod"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" eType="#//Location"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isRefundable" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dueDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="hasFee" upperBound="-1"
         eType="#//Student" containment="true"/>
   </eClassifiers>
@@ -256,6 +265,7 @@
   <eClassifiers xsi:type="ecore:EEnum" name="PaymentMethod">
     <eLiterals name="BankChallan"/>
     <eLiterals name="CreditCard" value="1"/>
+    <eLiterals name="SecurityDeposit" value="2"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Location">
     <eLiterals name="AccountsOffice"/>
