@@ -12,11 +12,17 @@
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="Student">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
-      <details key="constraints" value="ViewWarningStatus ViewFeeDetails"/>
+      <details key="constraints" value="ViewWarningStatus ViewFeeDetails IssueWarningAtSemesterEnd UpdateWarningCountAfterSemester WarningCountClosure ResetWarningCount AdmissionCancellation FeeDueDate"/>
     </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="ViewWarningStatus" value="self.warningCount->notEmpty() implies self.viewWarning() &lt;> null"/>
       <details key="ViewFeeDetails" value=" self.viewFeeDetails() &lt;> null"/>
+      <details key="IssueWarningAtSemesterEnd" value="&#xA;            self.studiedBy->exists(sem | &#xA;             self.hasSemester.semesterType = SemesterType::Fall or&#xA;             self.hasSemester.semesterType = SemesterType::Spring or&#xA;             self.hasSemester.semesterType = SemesterType::Summer&#xA;             ) implies&#xA;               self.CGPA &lt; self.offered.minimumCGPA implies&#xA;               self.warningCount > self.Issued->size()@pre"/>
+      <details key="UpdateWarningCountAfterSemester" value="&#xA;        self.hasSemester &lt;> null implies&#xA;        self.updateWarningCountIfNeeded()"/>
+      <details key="WarningCountClosure" value="&#xA;        self.warningCount &lt;= 2"/>
+      <details key="ResetWarningCount" value="&#xA;        (self.warningCount >= 3 and self.CGPA >= self.offered.minimumCGPA) implies&#xA;        self.warningCount = 0"/>
+      <details key="AdmissionCancellation" value="&#xA;        let maxDuration : Integer = 10&#xA;        in&#xA;            self.calculateEnrollmentDuration() &lt;= maxDuration"/>
+      <details key="FeeDueDate" value="&#xA;        self.checkFeeDueDate()"/>
     </eAnnotations>
     <eOperations name="registerCourses"/>
     <eOperations name="withdrawCourse"/>
@@ -24,13 +30,16 @@
     <eOperations name="viewFeeDetails"/>
     <eOperations name="applyForFinancialAid"/>
     <eOperations name="dropCourse"/>
-    <eOperations name="aaplyForGradeChangeRequest"/>
+    <eOperations name="applyForGradeChangeRequest"/>
     <eOperations name="requestForSubsequentSemesterRegisteration"/>
     <eOperations name="applyForLoan"/>
     <eOperations name="renewLoan"/>
     <eOperations name="signIn"/>
     <eOperations name="signOut"/>
     <eOperations name="viewAllCourses"/>
+    <eOperations name="updateWarningCountIfNeeded" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eOperations name="calculateEnrollmentDuration" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigInteger"/>
+    <eOperations name="checkFeeDueDate" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rollNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
@@ -51,16 +60,40 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="warningCount" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="CGPA" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Double"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="Issued" upperBound="3"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Issued" upperBound="-1"
         eType="#//Warning" eOpposite="#//Warning/issuedTo"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="studentType" eType="#//Student%20Type"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="studiedBy" upperBound="-1"
         eType="#//Registeration"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="studies" upperBound="-1"
         eType="#//Courses" eOpposite="#//Courses/studiedBy"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="offered" lowerBound="1"
+        eType="#//Degree"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hasSemester" lowerBound="1"
+        eType="#//Semester"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MasterStudent" eSuperTypes="#//Student"/>
   <eClassifiers xsi:type="ecore:EClass" name="BachelorStudent" eSuperTypes="#//Student"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Degree">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+      <details key="constraints" value="ValidMinimumCGPA ValidDuration"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="ValidMinimumCGPA" value="&#xA;    self.minimumCGPA >= 0.0 and self.minimumCGPA &lt;= 4.0"/>
+      <details key="ValidDuration" value="&#xA;    self.durationInYears > 0"/>
+    </eAnnotations>
+    <eOperations name="viewDegreeDetails"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="programCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="minimumCGPA" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Double"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="durationInYears" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigInteger"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="department" eType="#//Department"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="offeredTo" upperBound="-1"
+        eType="#//Student"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Courses">
     <eOperations name="viewCourseDetails"/>
     <eOperations name="viewEnrolledStudents"/>
@@ -91,7 +124,7 @@
     <eOperations name="viewSemesterDetails"/>
     <eOperations name="viewCourseOfferings"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="semesterID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="SemesterType" eType="#//SemesterType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="semesterType" eType="#//SemesterType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="year" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="offers" upperBound="-1"
         eType="#//Courses" eOpposite="#//Courses/offeredIn"/>
@@ -187,6 +220,7 @@
   <eClassifiers xsi:type="ecore:EEnum" name="Location">
     <eLiterals name="AccountsOffice"/>
     <eLiterals name="Flex" value="1"/>
+    <eLiterals name="Home"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="CourseType">
     <eLiterals name="core"/>
@@ -228,6 +262,10 @@
   <eClassifiers xsi:type="ecore:EEnum" name="FinancialAidStatus">
     <eLiterals name="approved"/>
     <eLiterals name="pending" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="FeeType">
+    <eLiterals name="Non refundable"/>
+    <eLiterals name="Security Deposit" value="1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Grade">
     <eOperations name="viewGradeDetails"/>
