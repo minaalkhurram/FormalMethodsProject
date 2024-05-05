@@ -41,6 +41,8 @@
     <eOperations name="calculateEnrollmentDuration" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigInteger"/>
     <eOperations name="checkFeeDueDate" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hasCompletedCourse" lowerBound="1"
+        eType="#//Courses"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rollNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="section" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -71,6 +73,10 @@
         eType="#//Degree"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="hasSemester" lowerBound="1"
         eType="#//Semester"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hasTranscript" lowerBound="1"
+        eType="#//Transcript" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hasResult" lowerBound="1"
+        eType="#//Result" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MasterStudent" eSuperTypes="#//Student"/>
   <eClassifiers xsi:type="ecore:EClass" name="BachelorStudent" eSuperTypes="#//Student"/>
@@ -93,6 +99,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="department" eType="#//Department"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="offeredTo" upperBound="-1"
         eType="#//Student"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coreCourses" upperBound="-1"
+        eType="#//Courses"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Courses">
     <eOperations name="viewCourseDetails"/>
@@ -106,6 +114,8 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="semester" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="repeatIndicator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="announcedDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="offeredBy" eType="#//Department"
         eOpposite="#//Department/offers"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="taughtBy" upperBound="-1"
@@ -119,6 +129,8 @@
         eOpposite="#//Semester/offers"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="studiedBy" upperBound="-1"
         eType="#//Student" eOpposite="#//Student/studies"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hasResult" lowerBound="1"
+        eType="#//Result"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Semester">
     <eOperations name="viewSemesterDetails"/>
@@ -174,11 +186,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="attendanceID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="studentID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="courseID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="courseName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="semesterID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="attendancePercentage" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Double"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="hasResult" upperBound="-1"
-        eType="#//Student" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hasGrade" upperBound="-1"
+        eType="#//Grade" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Fee">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
@@ -240,7 +253,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="Registeration">
     <eOperations name="viewRegisteration"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="registerationDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dropDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="registerationStatus" eType="#//RegisterationStatus"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exceptionMessage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="withdrawalDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="RegisterationStatus">
     <eLiterals name="registered"/>
@@ -270,6 +286,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="Grade">
     <eOperations name="viewGradeDetails"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="GradeType" eType="#//Grade%20Type"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Transcript">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="courses" upperBound="-1"
+        eType="#//Courses" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Grade Type">
     <eLiterals name="A*"/>
