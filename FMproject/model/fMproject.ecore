@@ -12,16 +12,19 @@
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="Student">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
-      <details key="constraints" value="oneViewCourses threeCourseType threeChooseElectiveCourses fourStudentType sevenDropCourseWithinTwoWeeks tenthRepeatFailedCourses elevenRepeatCoursesForLowGPA forteenViewWarningStatus fifteenIssueWarningAtSemesterEnd sixteenRegisterCourseWithWarning seventeenUpdateWarningCountAfterSemester eighteenResetWarningCount ninteenAdmissionCancellation twentyViewFeeDetails twentyfourEligibility twentyfiveLoan twentyEight thirtyfive thirtySix thirtyseven thirtyeight thirtyNine"/>
+      <details key="constraints" value="oneViewCourses threeCourseType threeChooseElectiveCourses fourStudentType fiveWithdrawBeforeAnnouncedDate sevenDropCourseWithinTwoWeeks ninecalculateCgpa tenthRepeatFailedCourses elevenRepeatCoursesForLowGPA tweleveRepeatCourseCondition forteenViewWarningStatus fifteenIssueWarningAtSemesterEnd sixteenRegisterCourseWithWarning seventeenUpdateWarningCountAfterSemester eighteenResetWarningCount ninteenAdmissionCancellation twentyViewFeeDetails twentyfourEligibility twentyfiveLoan twentyEight thirtyfive thirtySix thirtyseven thirtyeight thirtyNine"/>
     </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="oneViewCourses" value="&#xA;&#x9;&#x9;self.studies.offeredIn->exists(semester | &#xA;&#x9;&#x9;&#x9;semester.offers->exists(course | &#xA;&#x9;&#x9;&#x9;&#x9;course.offeredBy &lt;> null&#xA;&#x9;&#x9;&#x9;)&#xA;&#x9;&#x9;)"/>
       <details key="threeCourseType" value=" let coreCourses = self.offered.coreCourses in&#xA;&#x9;&#x9;coreCourses->forAll(course | self.hasCompletedCourse->includes(course)) &#xA;&#x9;&#x9;implies self.offered.isCompleted = true"/>
       <details key="threeChooseElectiveCourses" value="(let electiveCourses = self.studies->select(course | course.courseType = CourseType::elective) in&#xA;&#x9;     electiveCourses->size() > 0)"/>
       <details key="fourStudentType" value="&#xA;         if self.oclIsTypeOf(BachelorStudent) then&#xA;        self.studies->size() &lt;= 5&#xA;         else&#xA;        self.studies->size() &lt;= 3&#xA;         endif"/>
+      <details key="fiveWithdrawBeforeAnnouncedDate" value="&#xA;    (self.studiedBy ->forAll(reg |&#xA;        reg.withdrawalDate &lt;> null and ( reg.canWithdraw()=true)&#xA;    ))"/>
       <details key="sevenDropCourseWithinTwoWeeks" value="&#xA;         &#x9;self.studiedBy->forAll(reg | reg.dropDate->notEmpty() and reg.registerationDate->notEmpty()&#xA;         &#x9;and reg.canDrop()=true)"/>
+      <details key="ninecalculateCgpa" value="&#xA;     let totalCredits : Integer = self.hasTranscript.courses->collect(course | course.creditHours)->sum()&#xA;     , &#xA;     totalGradePoints : _'ecore.xml.type'::Double[1] = self.hasTranscript.courses->collect(course | course.hasResult.hasGrade.getGradePoint() )->sum()&#xA;      in&#xA;            self.CGPA = totalGradePoints/totalCredits"/>
       <details key="tenthRepeatFailedCourses" value="self.hasCompletedCourse->forAll(course | course.hasResult->isEmpty() or course.hasResult.hasGrade.GradeType &lt;> 'F')"/>
       <details key="elevenRepeatCoursesForLowGPA" value="&#xA;        self.warningCount > 0 and&#xA;                self.CGPA &lt; self.offered.minimumCGPA and&#xA;        self.hasCompletedCourse->exists(course |&#xA;            let result : Result = course.hasResult in&#xA;            result.hasGrade.GradeType=_'Grade Type'::C or  result.hasGrade.GradeType=_'Grade Type'::_'C-' or&#xA;            result.hasGrade.GradeType=_'Grade Type'::D or result.hasGrade.GradeType=_'Grade Type'::_'D-'   or&#xA;            result.hasGrade.GradeType=_'Grade Type'::F&#xA;        )"/>
+      <details key="tweleveRepeatCourseCondition" value="&#xA;        self.studies.hasResult->exists(result |&#xA;        result.studentID = self.rollNumber and &#xA;            result.hasGrade.GradeType=  _'Grade Type'::F   or result.hasGrade.GradeType=  _'Grade Type'::W or&#xA;            &#xA;             result.hasGrade.GradeType &lt;>  _'Grade Type'::_'A*' or   result.hasGrade.GradeType&lt;>  _'Grade Type'::A&#xA;            &#xA;        )"/>
       <details key="forteenViewWarningStatus" value="self.warningCount->notEmpty() implies self.viewWarning() &lt;> null"/>
       <details key="fifteenIssueWarningAtSemesterEnd" value="&#xA;            self.studiedBy->exists(sem | &#xA;             self.hasSemester.semesterType = SemesterType::Fall or&#xA;             self.hasSemester.semesterType = SemesterType::Spring or&#xA;             self.hasSemester.semesterType = SemesterType::Summer&#xA;             ) implies&#xA;               self.CGPA &lt; self.offered.minimumCGPA implies&#xA;               self.warningCount > self.Issued->size()@pre"/>
       <details key="sixteenRegisterCourseWithWarning" value="self.warningCount > 0 and self.getApprovalByHOD() implies self.registerCourses()"/>
@@ -66,6 +69,12 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rollNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="withdrawnCourseList" ordered="false"
+        upperBound="-1" eType="#//Courses">
+      <eAnnotations source="http://www.eclipse.org/OCL/Collection">
+        <details key="nullFree" value="false"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="section" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="degree" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="CNIC" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Long"/>
@@ -307,12 +316,14 @@
   <eClassifiers xsi:type="ecore:EClass" name="Registeration">
     <eOperations name="viewRegisteration"/>
     <eOperations name="canDrop" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eOperations name="canWithdraw" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="registerationDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastregisterationDate"
         eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dropDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="registerationStatus" eType="#//RegisterationStatus"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="exceptionMessage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="annoucedDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="withdrawalDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="hasCourses" upperBound="-1"
         eType="#//Courses"/>
@@ -354,6 +365,7 @@
     <eLiterals name="Security Deposit" value="1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Grade">
+    <eOperations name="getGradePoint" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Double"/>
     <eOperations name="viewGradeDetails"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="GradeType" eType="#//Grade%20Type"/>
   </eClassifiers>
