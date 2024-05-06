@@ -60,8 +60,6 @@
     <eOperations name="applyForLoan"/>
     <eOperations name="renewLoan"/>
     <eOperations name="renewAid" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eOperations name="signIn"/>
-    <eOperations name="signOut"/>
     <eOperations name="viewAllCourses"/>
     <eOperations name="updateWarningCountIfNeeded" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eOperations name="calculateEnrollmentDuration" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigInteger"/>

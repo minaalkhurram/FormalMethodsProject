@@ -5,6 +5,9 @@
     <semanticResources>fMproject.genmodel</semanticResources>
     <semanticResources>Fee.xmi</semanticResources>
     <semanticResources>Student.xmi</semanticResources>
+    <semanticResources>Student1.xmi</semanticResources>
+    <semanticResources>Semester.xmi</semanticResources>
+    <semanticResources>Fee1.xmi</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_lVE6oAk1Ee-DmtX_olyh4w">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
       <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_UfbA4ApNEe-NMKQWuBqFbA" name="fMproject class diagram" repPath="#_UfTsIApNEe-NMKQWuBqFbA" changeId="1714913676162">
