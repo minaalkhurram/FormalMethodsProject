@@ -12,7 +12,7 @@
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="Student">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
-      <details key="constraints" value="oneViewCourses threeCourseType threeChooseElectiveCourses fourMaxCoursesAndPrerequisiteException fiveWithdrawBeforeAnnouncedDate sevenDropCourseWithinTwoWeeks ninecalculateCgpa tenthRepeatFailedCourses elevenRepeatCoursesForLowGPA tweleveRepeatCourseCondition forteenViewWarningStatus fifteenIssueWarningAtSemesterEnd sixteenRegisterCourseWithWarning seventeenUpdateWarningCountAfterSemester eighteenResetWarningCount eighteenCancelAdmission nineteenCancelAdmission twentyViewFeeDetails twentyOne twentyfourEligibility twentyfiveLoan twentyEight thirtyfive thirtySix thirtyseven thirtyeight thirtyNine thirtyOne thirtyTwo thirtyFour"/>
+      <details key="constraints" value="oneViewCourses threeCourseType threeChooseElectiveCourses fourMaxCoursesAndPrerequisiteException fiveWithdrawBeforeAnnouncedDate SixWithdrawnCourseAppearance sevenDropCourseWithinTwoWeeks ninecalculateCgpa tenthRepeatFailedCourses elevenRepeatCoursesForLowGPA tweleveRepeatCourseCondition forteenViewWarningStatus fifteenIssueWarningAtSemesterEnd sixteenRegisterCourseWithWarning seventeenUpdateWarningCountAfterSemester eighteenResetWarningCount eighteenCancelAdmission nineteenCancelAdmission twentyViewFeeDetails twentyOne twentyfourEligibility twentyfiveLoan twentyEight thirtyfive thirtySix thirtyseven thirtyeight thirtyNine thirtyOne thirtyTwo thirtyFour"/>
     </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="oneViewCourses" value="&#xA;&#x9;&#x9;self.studies.offeredIn->exists(semester | &#xA;&#x9;&#x9;&#x9;semester.offers->exists(course | &#xA;&#x9;&#x9;&#x9;&#x9;course.offeredBy &lt;> null&#xA;&#x9;&#x9;&#x9;)&#xA;&#x9;&#x9;)"/>
@@ -20,6 +20,7 @@
       <details key="threeChooseElectiveCourses" value="(let electiveCourses = self.studies->select(course | course.courseType = CourseType::elective) in&#xA;&#x9;     electiveCourses->size() > 0)"/>
       <details key="fourMaxCoursesAndPrerequisiteException" value="(&#xA;&#x9;&#x9;if self.oclIsTypeOf(BachelorStudent) then self.studies->size() &lt;= 5&#xA;&#x9;&#x9;else self.oclIsTypeOf(MasterStudent) implies self.studies->size() &lt;= 3&#xA;&#x9;&#x9;endif and(self.studies->exists(course | course.hasPreReq->exists(prereq |  not self.hasCompletedCourse->exists(course | course = prereq)))) implies self.studiedBy.exceptionMessage->notEmpty())"/>
       <details key="fiveWithdrawBeforeAnnouncedDate" value="&#xA;    (self.studiedBy ->forAll(reg |&#xA;        reg.withdrawalDate &lt;> null and ( reg.canWithdraw()=true)&#xA;    ))"/>
+      <details key="SixWithdrawnCourseAppearance" value="&#xA; (  &#xA;   self.withdrawnCourseList->forAll(course |&#xA;        self.hasTranscript.courses->includes(course) and&#xA;        course.courseStatus = 'W'&#xA;    )&#xA;)"/>
       <details key="sevenDropCourseWithinTwoWeeks" value="&#xA;         &#x9;self.studiedBy->forAll(reg | reg.dropDate->notEmpty() and reg.registerationDate->notEmpty()&#xA;         &#x9;and reg.canDrop()=true)"/>
       <details key="ninecalculateCgpa" value="&#xA;     let totalCredits : Integer = self.hasTranscript.courses->collect(course | course.creditHours)->sum()&#xA;     , &#xA;     totalGradePoints : _'ecore.xml.type'::Double[1] = self.hasTranscript.courses->collect(course | course.hasResult.hasGrade.getGradePoint() )->sum()&#xA;      in&#xA;            self.CGPA = totalGradePoints/totalCredits"/>
       <details key="tenthRepeatFailedCourses" value="self.hasCompletedCourse->forAll(course | course.hasResult->isEmpty() or course.hasResult.hasGrade.GradeType &lt;> 'F')"/>
@@ -75,11 +76,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rollNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="withdrawnCourseList" ordered="false"
-        upperBound="-1" eType="#//Courses">
-      <eAnnotations source="http://www.eclipse.org/OCL/Collection">
-        <details key="nullFree" value="false"/>
-      </eAnnotations>
-    </eStructuralFeatures>
+        upperBound="-1" eType="#//Courses"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="section" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="degree" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="CNIC" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Long"/>
