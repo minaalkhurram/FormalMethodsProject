@@ -12,7 +12,7 @@
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="Student">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
-      <details key="constraints" value="oneViewCourses threeCourseType threeChooseElectiveCourses fourMaxCoursesAndPrerequisiteException fiveWithdrawBeforeAnnouncedDate sevenDropCourseWithinTwoWeeks ninecalculateCgpa tenthRepeatFailedCourses elevenRepeatCoursesForLowGPA tweleveRepeatCourseCondition forteenViewWarningStatus fifteenIssueWarningAtSemesterEnd sixteenRegisterCourseWithWarning seventeenUpdateWarningCountAfterSemester eighteenResetWarningCount eighteenCancelAdmission nineteenCancelAdmission twentyViewFeeDetails twentyfourEligibility twentyfiveLoan twentyEight thirtyfive thirtySix thirtyseven thirtyeight thirtyNine"/>
+      <details key="constraints" value="oneViewCourses threeCourseType threeChooseElectiveCourses fourMaxCoursesAndPrerequisiteException fiveWithdrawBeforeAnnouncedDate sevenDropCourseWithinTwoWeeks ninecalculateCgpa tenthRepeatFailedCourses elevenRepeatCoursesForLowGPA tweleveRepeatCourseCondition forteenViewWarningStatus fifteenIssueWarningAtSemesterEnd sixteenRegisterCourseWithWarning seventeenUpdateWarningCountAfterSemester eighteenResetWarningCount eighteenCancelAdmission nineteenCancelAdmission twentyViewFeeDetails twentyOne twentyfourEligibility twentyfiveLoan twentyEight thirtyfive thirtySix thirtyseven thirtyeight thirtyNine"/>
     </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="oneViewCourses" value="&#xA;&#x9;&#x9;self.studies.offeredIn->exists(semester | &#xA;&#x9;&#x9;&#x9;semester.offers->exists(course | &#xA;&#x9;&#x9;&#x9;&#x9;course.offeredBy &lt;> null&#xA;&#x9;&#x9;&#x9;)&#xA;&#x9;&#x9;)"/>
@@ -33,6 +33,7 @@
       <details key="eighteenCancelAdmission" value="&#xA;        (self.warningCount = 3 and self.CGPA &lt; self.offered.minimumCGPA) implies&#xA;        self.isEnrolledIn.cancelAdmission()"/>
       <details key="nineteenCancelAdmission" value="&#xA;       let maxDuration : Integer = 10 in&#xA;       (self.warningCount = 3 and self.CGPA &lt; self.offered.minimumCGPA) or&#xA;       (self.calculateEnrollmentDuration() > maxDuration) implies&#xA;        self.isEnrolledIn.cancelAdmission()"/>
       <details key="twentyViewFeeDetails" value=" self.viewFeeDetails() &lt;> null"/>
+      <details key="twentyOne" value="&#xA;         self.hasSemester->notEmpty() implies  &#xA;         let registration = self.studiedBy->select(r | r.registerationStatus = RegisterationStatus::registered)->asSet()->any(true) &#xA;           in&#xA;          registration->notEmpty() and&#xA;          self.hasFee->notEmpty() and&#xA;          self.hasFee.dueDate = &#xA;          if registration.registerationDate->notEmpty() then&#xA;            registration.twoWeeksBeforeDate&#xA;          else null&#xA;          endif"/>
       <details key="twentyfourEligibility" value="self.hasPaidAllDues or self.getApprovalByHOD() implies  self.canAppearinExams()"/>
       <details key="twentyfiveLoan" value=" self.studentType = _'Student Type'::indigent implies&#xA;        (&#xA;        self.applyForLoan() &lt;> null&#xA;        )"/>
       <details key="twentyEight" value=" self.degree = 'Bachelor' implies self.CGPA >= 2.0 implies self.hasLoan.loanStatus = LoanStatus::Active&#xA;        and&#xA;        self.degree = 'Master' implies self.CGPA >= 2.5 implies self.hasLoan.loanStatus = LoanStatus::Active&#xA;        and&#xA;        self.hasLoan.loanStatus = LoanStatus::Active implies (self.degree = 'Bachelor' and self.CGPA &lt; 2.0)&#xA;        or (self.degree = 'Master' and self.CGPA &lt; 2.5)"/>
@@ -262,6 +263,7 @@
       <details key="twentythreeRefundableFee" value="self.paymentMethod &lt;> PaymentMethod::SecurityDeposit implies&#xA;        self.isRefundable = false"/>
     </eAnnotations>
     <eOperations name="viewFeeDetail"/>
+    <eOperations name="payFee"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="paymentMethod" eType="#//PaymentMethod"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" eType="#//Location"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isRefundable" lowerBound="1"
@@ -271,6 +273,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dueDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="isGivenTo" upperBound="-1"
         eType="#//Student" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="offeredIn" lowerBound="1"
+        eType="#//Semester" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Loan">
     <eOperations name="repaymentDetails"/>
@@ -327,6 +331,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastregisterationDate"
         eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dropDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="twoWeeksBeforeDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="registerationStatus" eType="#//RegisterationStatus"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="exceptionMessage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="annoucedDate" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Date"/>
