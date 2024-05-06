@@ -12,7 +12,7 @@
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="Student">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
-      <details key="constraints" value="oneViewCourses threeCourseType threeChooseElectiveCourses fourStudentType fiveWithdrawBeforeAnnouncedDate sevenDropCourseWithinTwoWeeks ninecalculateCgpa tenthRepeatFailedCourses elevenRepeatCoursesForLowGPA tweleveRepeatCourseCondition forteenViewWarningStatus fifteenIssueWarningAtSemesterEnd sixteenRegisterCourseWithWarning seventeenUpdateWarningCountAfterSemester eighteenResetWarningCount ninteenAdmissionCancellation twentyViewFeeDetails twentyfourEligibility twentyfiveLoan twentyEight thirtyfive thirtySix thirtyseven thirtyeight thirtyNine"/>
+      <details key="constraints" value="oneViewCourses threeCourseType threeChooseElectiveCourses fourStudentType fiveWithdrawBeforeAnnouncedDate sevenDropCourseWithinTwoWeeks ninecalculateCgpa tenthRepeatFailedCourses elevenRepeatCoursesForLowGPA tweleveRepeatCourseCondition forteenViewWarningStatus fifteenIssueWarningAtSemesterEnd sixteenRegisterCourseWithWarning seventeenUpdateWarningCountAfterSemester eighteenResetWarningCount eighteenCancelAdmission nineteenCancelAdmission twentyViewFeeDetails twentyfourEligibility twentyfiveLoan twentyEight thirtyfive thirtySix thirtyseven thirtyeight thirtyNine"/>
     </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
       <details key="oneViewCourses" value="&#xA;&#x9;&#x9;self.studies.offeredIn->exists(semester | &#xA;&#x9;&#x9;&#x9;semester.offers->exists(course | &#xA;&#x9;&#x9;&#x9;&#x9;course.offeredBy &lt;> null&#xA;&#x9;&#x9;&#x9;)&#xA;&#x9;&#x9;)"/>
@@ -26,11 +26,12 @@
       <details key="elevenRepeatCoursesForLowGPA" value="&#xA;        self.warningCount > 0 and&#xA;                self.CGPA &lt; self.offered.minimumCGPA and&#xA;        self.hasCompletedCourse->exists(course |&#xA;            let result : Result = course.hasResult in&#xA;            result.hasGrade.GradeType=_'Grade Type'::C or  result.hasGrade.GradeType=_'Grade Type'::_'C-' or&#xA;            result.hasGrade.GradeType=_'Grade Type'::D or result.hasGrade.GradeType=_'Grade Type'::_'D-'   or&#xA;            result.hasGrade.GradeType=_'Grade Type'::F&#xA;        )"/>
       <details key="tweleveRepeatCourseCondition" value="&#xA;        self.studies.hasResult->exists(result |&#xA;        result.studentID = self.rollNumber and &#xA;            result.hasGrade.GradeType=  _'Grade Type'::F   or result.hasGrade.GradeType=  _'Grade Type'::W or&#xA;            &#xA;             result.hasGrade.GradeType &lt;>  _'Grade Type'::_'A*' or   result.hasGrade.GradeType&lt;>  _'Grade Type'::A&#xA;            &#xA;        )"/>
       <details key="forteenViewWarningStatus" value="self.warningCount->notEmpty() implies self.viewWarning() &lt;> null"/>
-      <details key="fifteenIssueWarningAtSemesterEnd" value="&#xA;            self.studiedBy->exists(sem | &#xA;             self.hasSemester.semesterType = SemesterType::Fall or&#xA;             self.hasSemester.semesterType = SemesterType::Spring or&#xA;             self.hasSemester.semesterType = SemesterType::Summer&#xA;             ) implies&#xA;               self.CGPA &lt; self.offered.minimumCGPA implies&#xA;               self.warningCount > self.Issued->size()@pre"/>
+      <details key="fifteenIssueWarningAtSemesterEnd" value="&#xA;            self.studiedBy->exists(sem | &#xA;             self.hasSemester.semesterType = SemesterType::Fall or&#xA;             self.hasSemester.semesterType = SemesterType::Spring or&#xA;             self.hasSemester.semesterType = SemesterType::Summer&#xA;             ) implies&#xA;               self.CGPA &lt; self.offered.minimumCGPA implies&#xA;               self.warningCount = self.Issued->size()@pre+1"/>
       <details key="sixteenRegisterCourseWithWarning" value="self.warningCount > 0 and self.getApprovalByHOD() implies self.registerCourses()"/>
-      <details key="seventeenUpdateWarningCountAfterSemester" value="&#xA;        self.studiedBy->notEmpty() and self.studiedBy->exists(registeration |&#xA;        registeration.registerationStatus = RegisterationStatus::_'not registered' and&#xA;        self.CGPA &lt; self.offered.minimumCGPA and&#xA;        self.warningCount = 1&#xA;        )"/>
-      <details key="eighteenResetWarningCount" value="&#xA;        (self.warningCount >= 3 and self.CGPA >= self.offered.minimumCGPA) implies&#xA;        self.warningCount = 0"/>
-      <details key="ninteenAdmissionCancellation" value="&#xA;        let maxDuration : Integer = 10&#xA;        in&#xA;            self.calculateEnrollmentDuration() &lt;= maxDuration"/>
+      <details key="seventeenUpdateWarningCountAfterSemester" value="&#xA;        self.studiedBy->notEmpty() and self.studiedBy->exists(registeration |&#xA;        registeration.registerationStatus = RegisterationStatus::_'not registered' and&#xA;        self.CGPA &lt; self.offered.minimumCGPA implies&#xA;        self.warningCount = self.Issued->size()@pre+1&#xA;        )"/>
+      <details key="eighteenResetWarningCount" value="&#xA;        self.warningCount >= 3 and self.CGPA >= self.offered.minimumCGPA implies&#xA;        self.warningCount = 0"/>
+      <details key="eighteenCancelAdmission" value="&#xA;        (self.warningCount = 3 and self.CGPA &lt; self.offered.minimumCGPA) implies&#xA;        self.isEnrolledIn.cancelAdmission()"/>
+      <details key="nineteenCancelAdmission" value="&#xA;       let maxDuration : Integer = 10 in&#xA;       (self.warningCount = 3 and self.CGPA &lt; self.offered.minimumCGPA) or&#xA;       (self.calculateEnrollmentDuration() > maxDuration) implies&#xA;        self.isEnrolledIn.cancelAdmission()"/>
       <details key="twentyViewFeeDetails" value=" self.viewFeeDetails() &lt;> null"/>
       <details key="twentyfourEligibility" value="self.hasPaidAllDues or self.getApprovalByHOD() implies  self.canAppearinExams()"/>
       <details key="twentyfiveLoan" value=" self.studentType = _'Student Type'::indigent implies&#xA;        (&#xA;        self.applyForLoan() &lt;> null&#xA;        )"/>
@@ -113,6 +114,8 @@
         eType="#//Fee"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="hasAid" ordered="false"
         upperBound="-1" eType="#//FinancialAid"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="isEnrolledIn" lowerBound="1"
+        eType="#//Department"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MasterStudent" eSuperTypes="#//Student"/>
   <eClassifiers xsi:type="ecore:EClass" name="BachelorStudent" eSuperTypes="#//Student"/>
@@ -190,6 +193,7 @@
         eType="#//Courses" eOpposite="#//Courses/offeredIn"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Department">
+    <eOperations name="cancelAdmission" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="deptName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="deptID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="offers" upperBound="-1"
